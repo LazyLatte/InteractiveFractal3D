@@ -1,7 +1,12 @@
-import { useState, FC, Dispatch} from 'react';
-import { SettingAction } from '../setting';
-interface ControlProps {dispatch: Dispatch<SettingAction>}
-const Control: FC<ControlProps> = ({dispatch}) => {
+import { useState, FC, ReactNode} from 'react';
+import {  useAppDispatch } from '../hooks';
+import { moveCamera, rotateCamera, wheelEps, wheelRayMultiplier } from '../reducers/fractalSlice';
+import Display from './Display';
+interface ControlProps {
+    children?: ReactNode;
+}
+const Control: FC<ControlProps> = ({children}) => {
+    const dispatch = useAppDispatch()
     const [evtButton, setEvtButton] = useState(-1);
     return (
         <div 
@@ -29,40 +34,40 @@ const Control: FC<ControlProps> = ({dispatch}) => {
             onMouseMove={(e) => {
                 if(document.pointerLockElement){
                     if(e.movementX === 0 && e.movementY === 0) return;
-                    dispatch({type: '@ROTATE_CAMERA', dir: [-e.movementY, -e.movementX]})
+                    dispatch(rotateCamera({dir: [-e.movementY, -e.movementX]}));
                 }
             }}
             onWheel={(e) => {
                 if(evtButton === -1){
-                    dispatch({type: '@SET_EPS', increase: e.deltaY > 0}) 
+                    dispatch(wheelEps({inc: e.deltaY > 0}))
                 }else if(evtButton === 2){
-                    dispatch({type: '@SET_RAY_MULTIPLIER', increase: e.deltaY > 0}) 
+                    dispatch(wheelRayMultiplier({inc: e.deltaY > 0}))
                 }
             }}
             onKeyDown={(e)=>{
                 switch(e.code){
                     case 'KeyE': {
-                        dispatch({type: '@MOVE_CAMERA', dir: [0, 1, 0]})
+                        dispatch(moveCamera({dir: [0, 1, 0]}));
                         break;
                     }
                     case 'KeyC': {
-                        dispatch({type: '@MOVE_CAMERA', dir: [0, -1, 0]})
+                        dispatch(moveCamera({dir: [0, -1, 0]}));
                         break;
                     }
                     case 'KeyW': {
-                        dispatch({type: '@MOVE_CAMERA', dir: [0, 0, 1]})
+                        dispatch(moveCamera({dir: [0, 0, 1]}));
                         break;
                     }
                     case 'KeyS': {
-                        dispatch({type: '@MOVE_CAMERA', dir: [0, 0, -1]})
+                        dispatch(moveCamera({dir: [0, 0, -1]}));
                         break;
                     }
                     case 'KeyA': {
-                        dispatch({type: '@MOVE_CAMERA', dir: [-1, 0, 0]})
+                        dispatch(moveCamera({dir: [-1, 0, 0]}));
                         break;
                     }
                     case 'KeyD': {
-                        dispatch({type: '@MOVE_CAMERA', dir: [1, 0, 0]})
+                        dispatch(moveCamera({dir: [1, 0, 0]}));
                         break;
                     }
                     default: break;
@@ -70,7 +75,10 @@ const Control: FC<ControlProps> = ({dispatch}) => {
                 
             }}
             
-        />
+        >
+            {children}
+            <Display/>
+        </div>
     )
 }
 

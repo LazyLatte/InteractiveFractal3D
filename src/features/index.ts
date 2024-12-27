@@ -1,2 +1,2 @@
-export {default} from './Fractal';
+export {default} from './FractalRenderer';
 export * from './error';

@@ -2,13 +2,31 @@
     "params": [3, 0.2],
     "juliaEnabled": true,
     "julia": [-0.1, 0.6, 0.9,-0.3],
-    "camera": [-1, 1.5, 0],
+    "pos": [-1, 1.5, 0],
     "eps": 0.0015,
     "ray_multiplier": 0.5,
-    "neon": false,
-    "color": {
-        "r": 124,
-        "g": 73,
-        "b": 25
+    "style": {
+        "color": {
+            "r": 124,
+            "g": 73,
+            "b": 25
+        },
+        "neon": false,
+        "orbit_freq": [1.0, 1.0, 1.0]
+    },
+    "lighting": {
+        "enabled": true,
+        "lights": [{
+            "pos": [10, 5, 10],
+            "color": {
+                "r": 255,
+                "g": 255,
+                "b": 255
+            }
+        }],
+        "shadow": 16.0
+    },
+    "environment": {
+        "decay": 0
     }
 }

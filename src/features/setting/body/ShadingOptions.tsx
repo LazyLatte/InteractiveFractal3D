@@ -1,4 +1,4 @@
-import { FC, ChangeEvent, Dispatch, useState } from 'react';
+import {useState } from 'react';
 import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
 import Slider from '@mui/material/Slider';
@@ -10,13 +10,12 @@ import ListItemText from '@mui/material/ListItemText';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 
-import Option from './Option';
 import { RgbColorPicker , RgbColor} from "react-colorful";
-import { SettingState, SettingAction } from '..';
-interface ShadingOptionsProps {
-    setting: SettingState;
-    dispatch: Dispatch<SettingAction>;
-}
+
+import { useAppSelector, useAppDispatch } from '../../hooks';
+import { setColor, setOrbitFrequency, toggleNeon, setDecay  } from '../../reducers/fractalSlice';
+
+import Option from './Option';
 
 const listItemStyle = {
     paddingTop: 0, 
@@ -37,14 +36,15 @@ const checkboxStyle = {
     height: "30px", 
     width: "30px"
 }
-const ShadingOptions: FC<ShadingOptionsProps> = (props) => {
-    const {setting, dispatch} = props;
-    const {style} = setting;
-    const toggleShadow = (_: ChangeEvent<HTMLInputElement>, checked: boolean) => dispatch({type: '@TOGGLE_SHADOW', shadow: checked});
-    const toggleNeon = (_: ChangeEvent<HTMLInputElement>, checked: boolean) => dispatch({type: '@TOGGLE_NEON', neon: checked});
-    const handleOnColorChange = (newColor: RgbColor) => dispatch({type: '@SET_COLOR', color: newColor});
-    const handleDecaySliderChange = (_: Event, newValue: number | number[]) => typeof newValue === 'number' && dispatch({type: '@SET_DECAY', decay: newValue});
-    const handleOrbitFreqSliderChange = (_: Event, newValue: number | number[], idx: number) => typeof newValue === 'number' && dispatch({type: '@SET_ORBIT_FREQUENCY', value: newValue, idx});
+const ShadingOptions = () => {
+    const dispatch = useAppDispatch();
+    const {style, environment} = useAppSelector(state => state.fractal);
+
+    //const toggleShadow = (_: ChangeEvent<HTMLInputElement>, checked: boolean) => dispatch({type: '@TOGGLE_SHADOW', shadow: checked});
+    const handleNeonCheckboxChange = () => dispatch(toggleNeon());
+    const handleColorChange = (newColor: RgbColor) => dispatch(setColor({color: newColor}));
+    const handleDecaySliderChange = (_: Event, newValue: number | number[]) => typeof newValue === 'number' && dispatch(setDecay({value: newValue}));
+    const handleOrbitFreqSliderChange = (_: Event, newValue: number | number[], idx: number) => typeof newValue === 'number' && dispatch(setOrbitFrequency({value: newValue, idx}));
 
     const [open, setOpen] = useState(false);
     const handleOrbitClick = () => {
@@ -52,15 +52,15 @@ const ShadingOptions: FC<ShadingOptionsProps> = (props) => {
     };
     return (
         <Box display='flex' flexDirection='row' justifyContent='space-around' alignItems='flex-start' sx={{width: 300, marginTop: '20px'}}>
-            <RgbColorPicker color={style.color} onChange={handleOnColorChange} style={{width: 150, minWidth: 150}}/>
+            <RgbColorPicker color={style.color} onChange={handleColorChange} style={{width: 150, minWidth: 150}}/>
             <List sx={{ width: '100%', maxWidth: 150}}>
                 <ListItem sx={listItemStyle}>
                     <ListItemText primary="shadow" />
-                    <Checkbox size="small" sx={checkboxStyle} checked={style.shadow} onChange={toggleShadow}/>
+                    <Checkbox size="small" sx={checkboxStyle} checked={true} onChange={() => {}}/>
                 </ListItem>
                 <ListItem sx={listItemStyle}>
                     <ListItemText primary="neon" />
-                    <Checkbox size="small" sx={checkboxStyle} checked={style.neon} onChange={toggleNeon}/>
+                    <Checkbox size="small" sx={checkboxStyle} checked={style.neon} onChange={handleNeonCheckboxChange}/>
                 </ListItem>
                 <ListItem sx={listItemStyle}>
                     <ListItemText primary="decay" />
@@ -68,7 +68,7 @@ const ShadingOptions: FC<ShadingOptionsProps> = (props) => {
                         min={0}
                         max={4}
                         step={0.5}
-                        value={style.decay}
+                        value={environment.decay}
                         onChange={handleDecaySliderChange}
                         valueLabelDisplay="auto"
                         sx={sliderStyle}

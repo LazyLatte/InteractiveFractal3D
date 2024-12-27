@@ -1,8 +1,8 @@
-import {FC, Dispatch} from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Slider from '@mui/material/Slider';
-import {Fractal, SettingAction} from '..';
+import { useAppSelector, useAppDispatch } from '../../hooks';
+import { setParameter } from '../../reducers/fractalSlice';
 
 import MandelBulbParamSliderSetting from '../../../data/mandelbulb/paramSliderSetting.json';
 import MandelBoxParamSliderSetting from '../../../data/mandelbox/paramSliderSetting.json';
@@ -10,15 +10,12 @@ import MengerParamSliderSetting from '../../../data/menger/paramSliderSetting.js
 import SierpinskiParamSliderSetting from '../../../data/sierpinski/paramSliderSetting.json';
 import Julia4DParamSliderSetting from '../../../data/julia4D/paramSliderSetting.json';
 
-interface ParamSliderProps {
-    fractal: Fractal;
-    params: number[];
-    dispatch: Dispatch<SettingAction>;
-}
 
 const sliderSetting = [MandelBulbParamSliderSetting, MandelBoxParamSliderSetting, MengerParamSliderSetting, SierpinskiParamSliderSetting, Julia4DParamSliderSetting] as const;
-const ParamSliders: FC<ParamSliderProps> = ({fractal, params, dispatch}) => {
-    const paramSliderSetting = sliderSetting[fractal].params;
+const ParamSliders = () => {
+    const dispatch = useAppDispatch();
+    const {type, params} = useAppSelector(state => state.fractal);
+    const paramSliderSetting = sliderSetting[type].params;
     return (<>
         {paramSliderSetting.map((p, i) => (
             <Box margin='8px 0' key={i}>
@@ -32,7 +29,7 @@ const ParamSliders: FC<ParamSliderProps> = ({fractal, params, dispatch}) => {
                     value={params[i]}
                     onChange={(_: Event, newValue: number | number[]) => {
                         if (typeof newValue === 'number') {
-                            dispatch({type: '@SET_PARAM', value: newValue, idx: i});
+                            dispatch(setParameter({idx: i, value: newValue}));
                         }
                     }}
                     valueLabelDisplay="auto"

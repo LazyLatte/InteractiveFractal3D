@@ -1,10 +1,10 @@
 import {createBrowserRouter, createRoutesFromElements, Route, RouterProvider} from "react-router-dom";
-import Fractal, {ErrorBoundary} from './features';
+import FractalRenderer, {ErrorBoundary} from './features';
 import './App.css'
 
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route path="/" element={<Fractal />} errorElement={<ErrorBoundary/>}/>
+    <Route path="/" element={<FractalRenderer />} errorElement={<ErrorBoundary/>}/>
   )
 );
 

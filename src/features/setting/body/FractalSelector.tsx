@@ -1,27 +1,26 @@
-import {FC, Dispatch, ChangeEvent} from 'react';
+import {ChangeEvent} from 'react';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import Select, {SelectChangeEvent} from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import Checkbox from '@mui/material/Checkbox';
-import {Fractal, SettingAction} from '..';
-interface FractalSelectorProps {
-    fractal: Fractal;
-    juliaEnabled: boolean;
-    dispatch: Dispatch<SettingAction>;
-}
-
-const FractalSelector: FC<FractalSelectorProps> = ({fractal, juliaEnabled, dispatch}) => {
-    const fractalTypes = Object.keys(Fractal).filter((_, i) => Fractal[i] === undefined);
-    const handleOnChange = (event: SelectChangeEvent<string>) => dispatch({type: '@SWITCH_FRACTAL', fractal: Fractal[event.target.value as keyof typeof Fractal]});
-    const handleCheckboxChange = (_: ChangeEvent<HTMLInputElement>, checked: boolean) => dispatch({type: '@TOGGLE_JULIA', juliaEnabled: checked});
+import { useAppSelector, useAppDispatch } from '../../hooks';
+import { switchFractal, toggleJulia } from '../../reducers/fractalSlice';
+import { FractalType } from '../../shaders/interfaces';
+const FractalSelector = () => {
+    const dispatch = useAppDispatch();
+    const {type, juliaEnabled} = useAppSelector(state => state.fractal);
+    
+    const fractalTypes = Object.keys(FractalType).filter((_, i) => FractalType[i] === undefined);
+    const handleOnChange = (e: SelectChangeEvent<string>) => dispatch(switchFractal({type: FractalType[e.target.value as keyof typeof FractalType]}));
+    const handleCheckboxChange = (_: ChangeEvent<HTMLInputElement>, checked: boolean) => dispatch(toggleJulia());
     const juliaCheckBox = <Checkbox checked={juliaEnabled} onChange={handleCheckboxChange}/>;
     return (
         <FormControl fullWidth focused={false} sx={{display: 'flex', flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', margin: '20px 0 12px'}}>
             <Select
                 id="fractal-select"
-                value={fractalTypes[fractal]}
+                value={fractalTypes[type]}
                 onChange={handleOnChange}
                 sx={{
                     width: 150

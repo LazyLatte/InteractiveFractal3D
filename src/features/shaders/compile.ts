@@ -1,6 +1,6 @@
 import {vs} from './vs.glsl';
 
-export const createFractalShdaer = (gl: WebGL2RenderingContext, fs: string): WebGLProgram => {
+export const compile = (gl: WebGL2RenderingContext, fs: string): WebGLProgram => {
   
   const initShader = (type: 'VERTEX_SHADER' | 'FRAGMENT_SHADER', source: string) => {
     const shader = gl.createShader(gl[type]);

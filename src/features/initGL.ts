@@ -1,4 +1,4 @@
-import { GLError} from "..";
+import { GLError} from ".";
 
 const canvas = document.createElement("canvas");
 canvas.id = "fractal-canvas";
@@ -6,6 +6,10 @@ canvas.style.width = `${window.innerWidth}px`;
 canvas.style.height = `${window.innerHeight}px`;
 canvas.width = Math.floor(window.innerWidth * window.devicePixelRatio);
 canvas.height = Math.floor(window.innerHeight * window.devicePixelRatio);
+
+canvas.width = 1280
+canvas.height = 720
+
 canvas.addEventListener('webglcontextlost', (_) => {
   alert("webgl context lost!");
   window.location.reload();

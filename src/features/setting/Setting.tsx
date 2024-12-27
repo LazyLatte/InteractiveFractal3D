@@ -1,4 +1,4 @@
-import { useState, FC, Dispatch} from 'react';
+import { useState } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Drawer from '@mui/material/Drawer';
@@ -8,12 +8,8 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import SettingHead from './head';
 import SettingBody from './body';
 import SettingFoot from './foot';
-import { SettingState, SettingAction } from '.';
-interface SettingProps {
-  setting: SettingState;
-  dispatch: Dispatch<SettingAction>;
-}
-const Setting: FC<SettingProps> = (props) => {
+
+const Setting = () => {
   const [open, setOpen] = useState(false);
   const handleOpenDrawer = () => setOpen(true);
   const handleDrawerClose = () => setOpen(false);
@@ -34,13 +30,13 @@ const Setting: FC<SettingProps> = (props) => {
           }
         }}
       >
-        <SettingHead onClick={handleDrawerClose}/>
+        <SettingHead closeDrawer={handleDrawerClose}/>
         <Divider/>
-        <SettingBody {...props}/>
-        <SettingFoot {...props}/>
+        <SettingBody/>
+        <SettingFoot/>
         <Box display='flex' flexDirection='row' justifyContent='space-around' alignItems='center'>
-          <Button onClick={()=>props.dispatch({type: '@FROM_SAMPLE', idx: 0})}>sample 0-red</Button>
-          <Button onClick={()=>props.dispatch({type: '@FROM_SAMPLE', idx: 1})}>sample 0-blue</Button>
+          <Button onClick={()=>{}}>sample 0-red</Button>
+          <Button onClick={()=>{}}>sample 0-blue</Button>
         </Box>
       </Drawer>
       <IconButton 

@@ -54,16 +54,19 @@ export const fs = `
             float est = map.x;
             orbit = map.y;
             if(abs(est) < eps || dist > far_plane) break;
-            dist += est * ray_multiplier;
+            dist += est * 0.5;
         }
-        //vec3 lightPos = vec3(2.0, -1.4, 4.0);
-        const int numOfLight = 4;
-        vec3 lightPos[numOfLight];
-        lightPos[0] = vec3(-3.0554, 3.45, -0.80699);
-        lightPos[1] = vec3(-2.93843, 3.76649, -0.86421);
-        lightPos[2] = vec3(-2.93843, 3.76275, -0.46785);
-        lightPos[3] = vec3(-3.0554, 3.45, -0.52228);
+        vec3 lightPos[1];
+        lightPos[0] = camera;
+        //vec3(2.0, -1.4, 4.0);
+        //const int numOfLight = 4;
+        //vec3 lightPos[numOfLight];
+        //lightPos[0] = vec3(-3.0554, 3.45, -0.80699);
+        //lightPos[1] = vec3(-2.93843, 3.76649, -0.86421);
+        //lightPos[2] = vec3(-2.93843, 3.76275, -0.46785);
+        //lightPos[3] = vec3(-3.0554, 3.45, -0.52228);
         vec3 final_color = vec3(0.0);
+        
         if(dist < far_plane){
             vec3 v = camera + dist * ray_dir;
             vec3 N = normalize(vec3(
@@ -73,26 +76,27 @@ export const fs = `
             ));
 
             
-            for(int i=0; i<numOfLight; i++){
+            for(int i=0; i<1; i++){
                 vec3 L = normalize(lightPos[i] - v);
                 vec3 H = normalize(L - ray_dir);
 
-                vec3 ambient = vec3(0.1);
+                vec3 ambient = vec3(0.3);
                 float lightDist = length(v-lightPos[i]);
-                float sdw = shadow ? softshadow(v + eps * N, L, 64.0, lightDist) : 1.0; 
-                vec3 diffuse = lightColor * clamp(dot(L, N), 0.0, 1.0) * sdw;
+                //float sdw = shadow ? softshadow(v + eps * N, L, 64.0, lightDist) : 1.0; 
+                vec3 diffuse = lightColor * clamp(dot(L, N), 0.0, 1.0);
                 vec3 specular = diffuse * pow(clamp(dot(H, N), 0.0, 1.0), gloss);
                 
                 vec3 color = palette(orbit, palette_seed);
                 color = neon ? (0.003 / color) : color;
 
                 color *= (ambient + diffuse + specular);
-                color = lightIntensityDecay(color, lightDist);
+                //color = lightIntensityDecay(color, lightDist);
                 final_color += color;
             }
 
         }
         final_color = gammaCorrection(final_color);
+        
         gl_FragColor = vec4(final_color, 1.0);
     }
 `
