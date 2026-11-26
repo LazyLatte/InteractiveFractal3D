@@ -2,7 +2,7 @@
 
 A webpage for exploring 3D Fractals. User can observe 3D Fractals from different angles or increase precision to show more details.
 
-![image](src/data/samples/0/0.png)
+![image](src/data/mandelbox/sample/0.png)
 
 [AWS Amplify Link](https://master.dkmywjvgw3zmj.amplifyapp.com)
 
